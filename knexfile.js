@@ -1,4 +1,4 @@
-// inclus toutes les configurations pour se connecter à la base de données selon l'environnement
+// // inclus toutes les configurations pour se connecter à la base de données selon l'environnement
 require('dotenv').config()
 const path = require('path')
 
@@ -6,12 +6,19 @@ const { CLIENT, DATABASE, PG_USER, PASSWORD, PG_PORT } = process.env
 
 module.exports = {
   development: {
-    client: CLIENT,
+    // client: CLIENT,
+    // connection: {
+    //   database: DATABASE,
+    //   user: PG_USER,
+    //   password: PASSWORD,
+    //   port: PG_PORT
+    // },
+    client: 'mysql',
     connection: {
-      database: DATABASE,
-      user: PG_USER,
-      password: PASSWORD,
-      port: PG_PORT
+      host : '127.0.0.1',
+      user : 'root',
+      password : '',
+      database : 'gemp'
     },
     migrations: {
       directory: path.join(`${__dirname}/db/migrations`),
@@ -52,3 +59,13 @@ module.exports = {
     }
   }
 }
+
+// const knex = require('knex')({
+//   client: 'mysql',
+//   connection: {
+//     host : '127.0.0.1',
+//     user : 'root',
+//     password : '',
+//     database : 'gemp'
+//   }
+// });
