@@ -44,15 +44,13 @@ const login = async (req, res) => {
   
       const token = jwt.sign(
         payload,
-        jwtSecret, 
-        { expiresIn: '2d' }
+        jwtSecret, { expiresIn: '2d' }
   
       )
       res.cookie('access_token', token, {
         expires: new Date(Date.now() + 100000000),
         secure: false, // set to true if your using https
-        httpOnly: true,
-  
+        httpOnly: true, 
       }).cookie('role', user.role, {
         expires: new Date(Date.now() + 100000000),
         secure: false, // set to true if your using https
@@ -62,7 +60,7 @@ const login = async (req, res) => {
       /* On envoie une reponse JSON contenant le role de l'utilisateur et le token CSRF */
   
       res.json({
-        id:user.id,
+        id: user.id,
         role: user.role,
         csrf: csrfToken
       })
@@ -95,19 +93,19 @@ const removeUser = async (req, res) => {
 const addUser = async (req, res) => {
     try {
       
-      const { email, nom, prenom, password,role,adresse } = req.body
+      const { email, nom, prenom, password, role, adresse } = req.body
       const emailExists = await knex.select().from('utilisateur').where('login', email).then((user) => { return user[0] })// verifier si l'email existe deja
       if (!emailExists) { // si l email n'existe pas dans la base de données alors inserer un nouveau user
-        const newUser = { email, nom, prenom, password ,adresse,role}
+        const newUser = { email, nom, prenom, password, role, adresse}
         const salt = await bcrypt.genSalt(10) // generer une chaîne aléatoire de 10 caracteres
         newUser.password = await bcrypt.hash(password, salt) // hasher le password
         await knex('utilisateur').insert([{
           login: newUser.email,
-        //   nom: newUser.nom,
-        //   prenom: newUser.prenom,
+          nom: newUser.nom,
+          prenom: newUser.prenom,
           password: newUser.password,
           role: newUser.role,
-          adresse:newUser.adresse,
+          adresse: newUser.adresse,
           
           
         }])
