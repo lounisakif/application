@@ -6,6 +6,8 @@ const jwtSecret = process.env.KEY
 // liste des users
 const listusers = async (req, res) => {
     try {
+
+      console.log('ok')
       const users = await knex.select().from('utilisateur').whereNot('role', 'adminn')
       return res.status(200).send(users)
     } catch (err) {
@@ -18,7 +20,7 @@ const listusers = async (req, res) => {
 const login = async (req, res) => {
     try {
       const { email, password } = req.body
-      console.log(req.body)
+      console.log("req.body")
       const user = await knex.select().from('utilisateur').where('login', email).then((user) => { return user[0] }) // chercher l'utilisateur dans la base de données
       if (!user) {
         // si le user n'existe pas dans la base de données
@@ -35,10 +37,12 @@ const login = async (req, res) => {
       const csrfToken = randtoken.generate(20)
       // grenerer un token jwt
     const id =user.id
+    const adresse =user.adresse
       const payload = { // ce qui sera renvoyé (id user) si le token est correct lors de la verification
         user: {
           csrfToken,
-          id
+          id,
+       
         }
       }
   
@@ -58,11 +62,12 @@ const login = async (req, res) => {
       })
   
       /* On envoie une reponse JSON contenant le role de l'utilisateur et le token CSRF */
-  
+  console.log('ok')
       res.json({
         id: user.id,
         role: user.role,
-        csrf: csrfToken
+        csrf: csrfToken,
+        adresse:user.adresse
       })
     } catch (err) {
       console.error(err.message)
